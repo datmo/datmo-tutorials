@@ -6,6 +6,7 @@ These are tutorial projects in using datmo. You can work on projects, after init
 
 2. Task 
    a. Run:
+   
        i. CLI: `datmo task run "python train_model_1.py"`
    
        ii.SDK: `datmo.task.run(command="python train_model_1.py")`
