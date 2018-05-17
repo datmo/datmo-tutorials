@@ -12,7 +12,6 @@ To use `datmo`, you can install it using `pip install datmo` after having the pr
 To run the `experimentation.ipynb` file, install the following libraries,
 
 * [NumPy](http://www.numpy.org/)
-
 * [SciPy](https://www.scipy.org/)
 * [scikit-learn](http://www.scikit-learn.org/)
 * [pandas](http://pandas.pydata.org)
