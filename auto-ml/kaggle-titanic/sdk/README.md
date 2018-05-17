@@ -1,5 +1,7 @@
 # auto-ml 
 
+## CLI
+
 #### 1. Kaggle Titanic Competition
 
 ##### a. Introduction
