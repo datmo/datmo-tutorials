@@ -1,5 +1,7 @@
 # auto-ml 
 
+### CLI
+
 #### 1. Kaggle Titanic Competition
 
 ##### a. Introduction
@@ -11,10 +13,13 @@ To use `datmo`, you can install it using `pip install datmo` after having the pr
 
 To run the `experimentation.ipynb` file, install the following libraries,
 
-- scikit-learn
-- xgboost
-- [tpot](http://epistasislab.github.io/tpot/installing/)
-- jupyter notebook
+* [NumPy](http://www.numpy.org/)
+* [SciPy](https://www.scipy.org/)
+* [scikit-learn](http://www.scikit-learn.org/)
+* [pandas](http://pandas.pydata.org)
+* [xgboost](http://xgboost.readthedocs.io/en/latest/build.html)
+* [tpot](http://epistasislab.github.io/tpot/installing/)
+* [jupyter notebook](http://jupyter.readthedocs.io/en/latest/install.html)
 
 We can look into the benefit in running the task using `datmo task run` which uses docker containers to encapsulate the environment. This will be done in a different tutorial.
 
