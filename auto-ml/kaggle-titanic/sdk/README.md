@@ -11,15 +11,7 @@ This tutorial is using the "Getting Started" competition from Kaggle [Titanic co
 ##### b. Installation
 To use `datmo`, you can install it using `pip install datmo` after having the prerequisites as in this [README](https://github.com/datmo/datmo)
 
-To run the `experimentation.ipynb` file, install the following libraries,
-
-* [NumPy](http://www.numpy.org/)
-* [SciPy](https://www.scipy.org/)
-* [scikit-learn](http://www.scikit-learn.org/)
-* [pandas](http://pandas.pydata.org)
-* [xgboost](http://xgboost.readthedocs.io/en/latest/build.html)
-* [tpot](http://epistasislab.github.io/tpot/installing/)
-* [jupyter notebook](http://jupyter.readthedocs.io/en/latest/install.html)
+To run the `experimentation.ipynb` file, install the prerequisite libraries by running `pip install -r requirements.txt`. Also, install [jupyter notebook](http://jupyter.readthedocs.io/en/latest/install.html) along with browser setup to be able to run it. 
 
 We can look into the benefit in running the task using `datmo task run` which uses docker containers to encapsulate the environment. This will be done in a different tutorial.
 
@@ -36,7 +28,7 @@ For auto-ml, we use the tpot algorithm, which works as follows,
 
 ##### d. Creating versions or snapshots
 
-During the process of EDA, data cleaning and algorithm selection, we would be using datmo to create versions of work by creating datmo snapshots. As you see below, we created three snapshots at the end of the notebook tutorial. More information about the flow can be found in the notebook file.  
+During the process of EDA, data cleaning and algorithm selection, we would be using datmo to create versions of work by creating datmo snapshots. As you see below, we created three snapshots at the end of the notebook tutorial. More information about the flow can be found in the notebook file.
 
 ```bash
 home:~/datmo-tutorials/auto-ml$ datmo snapshot ls
