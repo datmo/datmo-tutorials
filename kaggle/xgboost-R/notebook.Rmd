@@ -25,6 +25,32 @@ The purpose of this RMarkdown document is to demonstrate how easily we can lever
 
 First we will prepare the **Otto** dataset and train a model, then we will generate two vizualisations to get a clue of what is important to the model, finally, we will see how we can leverage these information.
 
+Setup
+=======
+We're going to install a python package called Datmo, which will enable us to log and track our experiments through the power of *snapshots*.
+If you don't already have pip, you can [find it here](https://pip.pypa.io/en/stable/installing/).
+
+```{bash}
+pip install datmo
+```
+
+Next, we're going to want to make sure we've set the proper working directory. We can do this easily through the 
+RStudio file finder on the right, or with the following command.
+
+This will be necessary so that Datmo knows the proper directory to perform tracking in. 
+
+```{r "setup", include=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "~/datmo-tutorials/kaggle/xgboost-R") # Replace with whatever your root directory for the project is
+```
+
+Now we're going to initialize a Datmo repository. This will enable us to create snapshots for logging our experiments.
+This only needs to be done once for a given repository.
+
+```{r initializeDatmo}
+system("datmo init", input=c("Otto kaggle competition project","Trying out experiment logging"), timeout=15)
+```
+
 Preparation of the data
 =======================
 
@@ -144,6 +170,33 @@ nround = 50
 bst = xgboost(param=param, data = trainMatrix, label = y, nrounds=nround)
 ```
 
+Now that we have the results of our first model, we'll want to create a snapshot so that we can easily compare it to future model versions, or revert back to this state if we decide to experiment in a different direction using it as a starting point.
+
+```{r define config and stats to write to snapshot}
+config<- paste(sep="",
+               " --config objective:", bst.cv$params$objective,
+               " --config eval_metric:", bst.cv$params$eval_metric,
+               " --config num_class:", bst.cv$params$num_class)
+
+#define metrics to save from the model
+stats<- paste(sep="",
+              " --stats train_logloss_mean:", bst.cv$evaluation_log$train_mlogloss_mean[50],
+              " --stats test_logloss_mean:", bst.cv$evaluation_log$test_mlogloss_mean[50])
+```
+
+With the configuration and stats defined, we can create a snapshot with the following command:
+
+```{r snapshot creation}
+# with config and stats
+system2("datmo", args=paste("snapshot create", "-m 'a full snapshot'", config, stats), timeout=30)
+```
+
+To confirm that this worked, we can try to visualize all snapshots currently in the project with:
+```{bash}
+datmo snapshot ls
+```
+
+
 Model understanding
 ===================
 
@@ -220,22 +273,6 @@ Feature importance gives you feature weight information but not interaction betw
 ```{r treeGraph, dpi=1500, fig.align='left'}
 xgb.plot.tree(feature_names = names, model = bst, n_first_tree = 2)
 ```
-
-```{r snapshot creation}
-config<- paste(sep="",
-               " --config objective:", bst.cv$params$objective,
-               " --config eval_metric:", bst.cv$params$eval_metric,
-               " --config num_class:", bst.cv$params$num_class)
-
-#define metrics to save from the model
-stats<- paste(sep="",
-              " --stats train_logloss_mean:", bst.cv$evaluation_log$train_mlogloss_mean[50],
-              " --stats test_logloss_mean:", bst.cv$evaluation_log$test_mlogloss_mean[50])
-
-# with config and stats
-system2("datmo", args=paste("snapshot create", "-m 'a full snapshot'", config, stats), timeout=30)
-```
-
 
 We are just displaying the first two trees here.
 
