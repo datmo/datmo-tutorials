@@ -283,6 +283,8 @@ Besides, **XGBoost** generate `k` trees at each round for a `k`-classification p
 Second Model Training (this time, with grid search)
 ===
 
+Search space setup
+---
 Let's set up grid that we'll search across during hyperparameter tuning.
 
 ```{r gridSetup}
@@ -320,6 +322,9 @@ param <- list("objective" = "multi:softprob",
               "num_class" = numberOfClasses)
 ```
 
+Perform grid search
+---
+
 The stage has been set and we're ready to train our model. This manual grid search will take a very long time to complete, even with only 50 rounds.
 
 ```{r trainModels}
@@ -338,8 +343,8 @@ Great, we've found the set of optimal parameters. As listed at the end of the pr
 **Fitting nrounds = 50, max_depth = 10, eta = 0.01, gamma = 1, colsample_bytree = 1, min_child_weight = 0.75, subsample = 1 on full training set**
 
 
-Improved Model Validation
-====
+Train second model using optimal params
+---
 We begin setting up our model hyperparameters with the ideal set returned from grid serach.
 
 ```{r optimalParams}
@@ -365,7 +370,7 @@ nround = 50
 bst_optimal = xgboost(param=xgb_optimal_params, data = trainMatrix, label = y, nrounds=nround)
 ```
 
-We now perform crossvalidation to compare the training metric changes to the test metric changes.
+We now perform cross validation to compare the training metric changes to the test metric changes.
 
 ```{r CV on optimal model}
 

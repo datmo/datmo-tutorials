@@ -1,36 +1,37 @@
-# datmo-tutorials
+# Datmo Tutorials
 
-These are tutorial projects in using datmo. You can work on projects, after initializing datmo inside the specific project folder. You can more examples [here](https://github.com/datmo/datmo/tree/master/examples)
+This repository is a running list of tutorials showcasing how Datmo can be used in quantitative modeling projects.
 
-1. Initialization: `datmo init`
+The features addressed in these tutorials are as follows:
 
-2. Task 
+  * **Experiment logging** 
+    * `snapshot create` (Record fully comprehensive project state)
+  
+  * **Project visualization** 
+    * `snapshot ls` - View all snapshots
+    * `snapshot diff` - Compare differences between two snapshots
+    * `snapshot inspect` - See all info about a single snapshot
+  
+  * **State recreation & reproducibility** 
+    * `snapshot checkout` - Revert to a project state from a different snapshot
+  
 
-   a. Run:
-   
-       i. CLI: `datmo task run "python train_model_1.py"`
-   
-       ii.SDK: `datmo.task.run(command="python train_model_1.py")`
-   
-3. Snapshot:
+For smaller examples with more isolated datmo feature demonstration, you can view the official core repository [here](https://github.com/datmo/datmo/tree/master/examples).
 
-   a. Create:
-   
-       i. CLI: `datmo snapshot create -m "my first snapshot"`
-       
-       ii.SDK: `datmo.snapshot.create(message="my first snapshot", config=config, stats=stats)`
-       
-   b. List:
-   
-       i. CLI: `datmo snapshot ls`
-       
-       ii.SDK: `datmo.snapshot.ls()`       
-       
-   c. Checkout:
-   
-       i. CLI: `datmo snapshot checkout --id <snapshot-id>`   
-       
-   d. Delete:
-   
-       i. CLI: `datmo snapshot delete --id <snapshot-id>`         
-       
+---
+
+## Tutorials
+
+### Python Tutorials
+
+| Project  | Tags | Datmo Features |
+| ------------- |:-------------:| -----|
+| Kaggle Titanic Survivor Prediction | AutoML, TPOT, SVM | `snapshot create`, `snapshot ls` |
+| Kaggle Jigsaw Toxic Comment Identification | NLP, bag of words | `snapshot create`, `snapshot ls` |
+
+
+### R Tutorials
+
+| Project  | Tags | Datmo Features |
+| ------------- |:-------------:| -----|
+| Kaggle Otto Product Classification | grid search, XGBoost | `snapshot create`, `snapshot ls` |
