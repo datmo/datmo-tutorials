@@ -1,0 +1,388 @@
+---
+title: "Kaggle XGBoost Experiment Tracking using the Otto Dataset"
+author: "Nick Walsh"
+output: 
+  rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
+---
+
+Preface
+===========
+
+This notebook is an adaptation of the "Understanding XGBoost Model on Otto Data" Kaggle kernel [available here](https://www.kaggle.com/tqchen/understanding-xgboost-model-on-otto-data). By working through this notebook, you will be able to get an understanding of how XGBoost can be used to solve a classification problem, and how you can work to tune your hyperparameters to improve upon previous versions of your model (whether it's your own, or a fork of someone else's).
+
+In this example, we will be using Datmo to help track our experiments and save our model versions as "snapshots", preserving the state of the entire directory, environment, and enabling reproducibility. Snapshots enable us to quickly recall information about snapshots at any time, such as model configuration, performance stats, and other metadata.
+
+
+Introduction
+============
+
+**XGBoost** is an implementation of the famous gradient boosting algorithm. This model is often described as a *blackbox*, meaning it works well but it is not trivial to understand how. Indeed, the model is made of hundreds (thousands?) of decision trees. You may wonder how possible a human would be able to have a general view of the model?
+
+While XGBoost is known for its fast speed and accurate predictive power, it also comes with various functions to help you understand the model.
+The purpose of this RMarkdown document is to demonstrate how easily we can leverage the functions already implemented in **XGBoost R** package. Of course, everything showed below can be applied to the dataset you may have to manipulate at work or wherever!
+
+First we will prepare the **Otto** dataset and train a model, then we will generate two vizualisations to get a clue of what is important to the model, finally, we will see how we can leverage these information.
+
+Preparation of the data
+=======================
+
+This part is based on the **R** tutorial example by [Tong He](https://github.com/dmlc/xgboost/blob/master/demo/kaggle-otto/otto_train_pred.R)
+
+First, let's load the packages and the dataset.
+
+```{r loading}
+require(xgboost)
+require(caret)
+require(methods)
+require(data.table)
+require(magrittr)
+train <- fread('input/train.csv', header = T, stringsAsFactors = F)
+test <- fread('input/test.csv', header=TRUE, stringsAsFactors = F)
+```
+> `magrittr` and `data.table` are here to make the code cleaner and much more rapid.
+
+Let's explore the dataset.
+
+```{r explore}
+# Train dataset dimensions
+dim(train)
+
+# Training content
+train[1:6,1:5, with =F]
+
+# Test dataset dimensions
+dim(train)
+
+# Test content
+test[1:6,1:5, with =F]
+```
+> We only display the 6 first rows and 5 first columns for convenience
+
+Each *column* represents a feature measured by an integer. Each *row* is an **Otto** product.
+
+Obviously the first column (`ID`) doesn't contain any useful information. 
+
+To let the algorithm focus on real stuff, we will delete it.
+
+```{r clean, results='hide'}
+# Delete ID column in training dataset
+train[, id := NULL]
+
+# Delete ID column in testing dataset
+test[, id := NULL]
+```
+
+According to its description, the **Otto** challenge is a multi class classification challenge. We need to extract the labels (here the name of the different classes) from the dataset. We only have two files (test and training), it seems logical that the training file contains the class we are looking for. Usually the labels is in the first or the last column. We already know what is in the first column, let's check the content of the last one.
+
+```{r searchLabel}
+# Check the content of the last column
+train[1:6, ncol(train), with  = F]
+# Save the name of the last column
+nameLastCol <- names(train)[ncol(train)]
+```
+
+The classes are provided as character string in the **`r ncol(train)`**th column called **`r nameLastCol`**. As you may know, **XGBoost** doesn't support anything else than numbers. So we will convert classes to integers. Moreover, according to the documentation, it should start at 0.
+
+For that purpose, we will:
+
+* extract the target column
+* remove "Class_" from each class name
+* convert to integers
+* remove 1 to the new value
+
+```{r classToIntegers}
+# Convert from classes to numbers
+y <- train[, nameLastCol, with = F][[1]] %>% gsub('Class_','',.) %>% {as.integer(.) -1}
+# Display the first 5 levels
+y[1:5]
+```
+
+We remove label column from training dataset, otherwise **XGBoost** would use it to guess the labels!
+
+```{r deleteCols, results='hide'}
+train[, nameLastCol:=NULL, with = F]
+```
+
+`data.table` is an awesome implementation of data.frame, unfortunately it is not a format supported natively by **XGBoost**. We need to convert both datasets (training and test) in numeric Matrix format.
+
+```{r convertToNumericMatrix}
+trainMatrix <- train[,lapply(.SD,as.numeric)] %>% as.matrix
+testMatrix <- test[,lapply(.SD,as.numeric)] %>% as.matrix
+```
+
+Original model training
+==============
+
+Before the learning we will use the cross validation to evaluate the our error rate.
+
+Basically **XGBoost** will divide the training data in `nfold` parts, then **XGBoost** will retain the first part and use it as the test data. Then it will reintegrate the first part to the training dataset and retain the second part, do a training and so on...
+
+Look at the function documentation for more information.
+
+
+```{r crossValidation}
+numberOfClasses <- max(y) + 1
+
+param <- list("objective" = "multi:softprob",
+              "eval_metric" = "mlogloss",
+              "num_class" = numberOfClasses)
+
+cv.nround <- 50
+cv.nfold <- 3
+
+bst.cv = xgb.cv(param=param, data = trainMatrix, label = y, 
+                nfold = cv.nfold, nrounds = cv.nround)
+```
+> As we can see the error rate is low on the test dataset (for a 5mn trained model).
+
+Finally, we are ready to train the real model!!!
+
+```{r modelTraining}
+nround = 50
+bst = xgboost(param=param, data = trainMatrix, label = y, nrounds=nround)
+```
+
+Model understanding
+===================
+
+Feature importance
+------------------
+
+So far, we have built a model made of **`r nround`** trees.
+
+To build a tree, the dataset is divided recursively several times. At the end of the process, you get groups of observations (here, these observations are properties regarding **Otto** products). 
+
+Each division operation is called a *split*.
+
+Each group at each division level is called a branch and the deepest level is called a **leaf**.
+
+In the final model, these leafs are supposed to be as pure as possible for each tree, meaning in our case that each leaf should be made of one class of **Otto** product only (of course it is not true, but that's what we try to achieve in a minimum of splits).
+
+**Not all splits are equally important**. Basically the first split of a tree will have more impact on the purity that, for instance, the deepest split. Intuitively, we understand that the first split makes most of the work, and the following splits focus on smaller parts of the dataset which have been missclassified by the first tree.
+
+In the same way, in Boosting we try to optimize the missclassification at each round (it is called the **loss**). So the first tree will do the big work and the following trees will focus on the remaining, on the parts not correctly learned by the previous trees.
+
+The improvement brought by each split can be measured, it is the **gain**.
+
+Each split is done on one feature only at one value. 
+
+Let's see what the model looks like.
+
+```{r modelDump}
+model <- xgb.dump(bst, with_stats = T)
+model[1:10]
+```
+> For convenience, we are displaying the first 10 lines of the model only.
+
+Clearly, it is not easy to understand what it means. 
+
+Basically each line represents a branch, there is the tree ID, the feature ID, the point where it splits, and information regarding the next branches (left, right, when the row for this feature is N/A).
+
+Hopefully, **XGBoost** offers a better representation: **feature importance**.
+
+Feature importance is about averaging the gain of each feature for all split and all trees.
+
+Then we can use the function `xgb.plot.importance`.
+
+```{r importanceFeature, fig.align='center', fig.height=5, fig.width=10}
+# Get the feature real names
+names <- dimnames(trainMatrix)[[2]]
+
+# Compute feature importance matrix
+importance_matrix <- xgb.importance(names, model = bst)
+
+# Nice graph
+xgb.plot.importance(importance_matrix[1:10,])
+```
+
+> To make it understandable we first extract the column names from the `Matrix`.
+
+Interpretation
+--------------
+
+In the feature importance above, we can see the first 10 most important features.
+
+This function gives a color to each bar. Basically a K-means clustering is  applied to group each feature by importance.
+
+From here you can take several actions. For instance you can remove the less important feature (feature selection process), or go deeper in the interaction between the most important features and labels.
+
+Or you can just reason about why these features are so importat (in **Otto** challenge we can't go this way because there is not enough information).
+
+Tree graph
+----------
+
+Feature importance gives you feature weight information but not interaction between features.
+
+**XGBoost R** package have another useful function for that. Note that you need to scroll the screen to right to see these trees due to layout of the rmarkdown.
+
+```{r treeGraph, dpi=1500, fig.align='left'}
+xgb.plot.tree(feature_names = names, model = bst, n_first_tree = 2)
+```
+
+```{r snapshot creation}
+config<- paste(sep="",
+               " --config objective:", bst.cv$params$objective,
+               " --config eval_metric:", bst.cv$params$eval_metric,
+               " --config num_class:", bst.cv$params$num_class)
+
+#define metrics to save from the model
+stats<- paste(sep="",
+              " --stats train_logloss_mean:", bst.cv$evaluation_log$train_mlogloss_mean[50],
+              " --stats test_logloss_mean:", bst.cv$evaluation_log$test_mlogloss_mean[50])
+
+# with config and stats
+system2("datmo", args=paste("snapshot create", "-m 'a full snapshot'", config, stats), timeout=30)
+```
+
+
+We are just displaying the first two trees here.
+
+On simple models the first two trees may be enough. Here, it might not be the case. We can see from the size of the trees that the intersaction between features is complicated. 
+Besides, **XGBoost** generate `k` trees at each round for a `k`-classification problem. Therefore the two trees illustrated here are trying to classify data into different classes.
+
+
+Second Model Training (this time, with grid search)
+===
+
+Let's set up grid that we'll search across during hyperparameter tuning.
+
+```{r gridSetup}
+# set up the cross-validated hyper-parameter search
+xgb_grid_1 = expand.grid(
+nrounds = 50,
+eta = c(0.01, 0.001, 0.0001),
+max_depth = c(2, 4, 6, 8, 10),
+gamma = 1,
+colsample_bytree = 1,
+min_child_weight = c(0.75,1,1.25),
+subsample = c(0.5,0.75,1)
+)
+```
+
+Now we'll define our control parameters. These will be similar to how they were earlier on the previous model training.
+
+```{r Control Params}
+# pack the training control parameters
+xgb_trcontrol_1 = trainControl(
+method = "cv",
+number = 5,
+verboseIter = TRUE,
+returnData = FALSE,
+returnResamp = "all",                                                        # save losses across all models
+classProbs = TRUE,                                                           # set to TRUE for AUC to be computed
+#summaryFunction = twoClassSummary,
+allowParallel = TRUE
+)
+
+numberOfClasses <- max(y) + 1
+
+param <- list("objective" = "multi:softprob",
+              "eval_metric" = "mlogloss",
+              "num_class" = numberOfClasses)
+```
+
+The stage has been set and we're ready to train our model. This manual grid search will take a very long time to complete, even with only 50 rounds.
+
+```{r trainModels}
+# train the model for each parameter combination in the grid,
+#   using CV to evaluate
+xgb_train_1 = train(
+x = trainMatrix,
+y = y,
+trControl = xgb_trcontrol_1,
+tuneGrid = xgb_grid_1,
+method="xgbTree"
+)
+```
+
+Great, we've found the set of optimal parameters. As listed at the end of the process above, they are:
+**Fitting nrounds = 50, max_depth = 10, eta = 0.01, gamma = 1, colsample_bytree = 1, min_child_weight = 0.75, subsample = 1 on full training set**
+
+
+Improved Model Validation
+====
+We begin setting up our model hyperparameters with the ideal set returned from grid serach.
+
+```{r optimalParams}
+# set up the cross-validated hyper-parameter search
+xgb_optimal_params = list(
+"nrounds" = 50,
+"eta" = .1, # Note, while .01 was returned as the "ideal" learning rate, we'll be using 0.1 in the interest of seeing the effect more quickly in a similar number of rounds from before.
+"max_depth" = 10,
+"gamma" = 1,
+"colsample_bytree" = 1,
+"min_child_weight" = 0.75,
+"subsample" = 1,
+"objective" = "multi:softprob",
+"eval_metric" = "mlogloss",
+"num_class" = numberOfClasses
+)
+```
+
+Now we retrain our XGBoost classifier using the optimal parameter list defined above.
+
+```{r modelTraining}
+nround = 50
+bst_optimal = xgboost(param=xgb_optimal_params, data = trainMatrix, label = y, nrounds=nround)
+```
+
+We now perform crossvalidation to compare the training metric changes to the test metric changes.
+
+```{r CV on optimal model}
+
+cv.nround <- 50
+cv.nfold <- 3
+
+bst_optimal.cv = xgb.cv(param=xgb_optimal_params, data = trainMatrix, label = y, 
+                nfold = cv.nfold, nrounds = cv.nround)
+```
+
+
+There's an improvement! After 50 rounds, our train logloss dropped. We can also see this when looking at cross validation after 50 rounds, the test-mlogloss (while higher at round 50), will go on to continue to push below the test-mlogloss from the baseline model in the coming rounds, and hopefully go on to show that we didn't overfit our model with the new hyperparameter configuration.
+
+Now, we'll want to create a snapshot of our model.
+```{r improved model stats and config definition}
+config<- paste(sep="",
+               " --config objective:", bst_optimal.cv$params$objective,
+               " --config eval_metric:", bst_optimal.cv$params$eval_metric,
+               " --config num_class:", bst_optimal.cv$params$num_class,
+               " --config eta:", bst_optimal.cv$params$eta,
+               " --config max_depth:", bst_optimal.cv$params$max_depth,
+               " --config min_child_weight:", bst_optimal.cv$params$min_child_weight,
+               " --config subsample:", bst_optimal.cv$params$subsample,
+               " --config gamma:", bst_optimal.cv$params$gamma,
+               " --config eta:", bst_optimal.cv$params$eta
+               )
+
+#define metrics to save from the model
+stats<- paste(sep="",
+              " --stats train_logloss_mean:", bst_optimal.cv$evaluation_log$train_mlogloss_mean[50],
+              " --stats test_logloss_mean:", bst_optimal.cv$evaluation_log$test_mlogloss_mean[50])
+```
+
+Now that we've defined the properties of the new snapshot, we can create it with the cell below.
+
+```{r improved model snapshot create}
+# with config and stats
+system2("datmo", args=paste("snapshot create", "-m 'grid search optimized model'", config, stats), timeout=30)
+```
+
+If it worked, we'll be able to visualize both snapshots in a table with the following command
+
+```{bash snapshot visualization}
+datmo snapshot ls
+```
+
+Congrats! You now have two snapshots, each maintaining the exact state of your local project when it was produced. You can use `datmo snapshot ls` at anytime in the future to visualize all snapshots for your given repository. While you continue tweaking those hyperparameters and improving your feature selection process, you can continue to record snapshots to log your work. If you'd like to revert back to a snapshot's state, youc an do so through your terminal with `datmo snapshot checkout` -- more info available on that [here](https://datmo.readthedocs.io/en/latest/cli.html#checkout).
+
+Further improving your model:
+============
+
+There are 3 documents you may be interested in:
+
+* [xgboostPresentation.Rmd](https://github.com/dmlc/xgboost/blob/master/R-package/vignettes/xgboostPresentation.Rmd): general presentation
+* [discoverYourData.Rmd](https://github.com/dmlc/xgboost/blob/master/R-package/vignettes/discoverYourData.Rmd): explaining feature analysus
+* [Feature Importance Analysis with XGBoost in Tax audit](http://fr.slideshare.net/MichaelBENESTY/feature-importance-analysis-with-xgboost-in-tax-audit): use case
+
