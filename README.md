@@ -1,19 +1,20 @@
 # Datmo Tutorials
 
-This repository is a running list of tutorials showcasing how Datmo can be used in quantitative modeling projects.
+This repository is a running list of tutorials showcasing how [Datmo](https://github.com/datmo/datmo) helps users working with quantitative modeling projects (data science, machine learning, and artificial intelligence).
 
-The features addressed in these tutorials are as follows:
+Prominent features addressed in the tutorials are as follows:
 
   * **Experiment logging** 
-    * `snapshot create` (Record fully comprehensive project state)
+    * `snapshot create` - Record fully comprehensive project state as a single unit
   
   * **Project visualization** 
-    * `snapshot ls` - View all snapshots
-    * `snapshot diff` - Compare differences between two snapshots
-    * `snapshot inspect` - See all info about a single snapshot
+    * `snapshot ls` - View all snapshots in the project
+    * `snapshot diff` - Compare differences/changes between two snapshots
+    * `snapshot inspect` - See in-depth info about a single snapshot
   
   * **State recreation & reproducibility** 
-    * `snapshot checkout` - Revert to a project state from a different snapshot
+    * `snapshot checkout` - Revert the project state to the version from a different snapshot
+    * `datmo task run` - Run a containerized task for easy environment handling
   
 
 For smaller examples with more isolated datmo feature demonstration, you can view the official core repository [here](https://github.com/datmo/datmo/tree/master/examples).
@@ -26,12 +27,12 @@ For smaller examples with more isolated datmo feature demonstration, you can vie
 
 | Project  | Tags | Datmo Features |
 | ------------- |:-------------:| -----|
-| Kaggle Titanic Survivor Prediction | AutoML, TPOT, SVM | `snapshot create`, `snapshot ls` |
-| Kaggle Jigsaw Toxic Comment Identification | NLP, bag of words | `snapshot create`, `snapshot ls` |
+| Kaggle Titanic Survivor Prediction <br> ([CLI](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/cli) / [SDK in Jupyter Notebook](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/sdk)) | AutoML, TPOT, SVM | `task run`, `snapshot create`, `snapshot ls` |
+| Kaggle Jigsaw Toxic Comment Identification <br> (SDK in Jupyter Notebook (Coming Soon)) | NLP, bag of words | `snapshot create`, `snapshot ls` |
 
 
 ### R Tutorials
 
 | Project  | Tags | Datmo Features |
 | ------------- |:-------------:| -----|
-| Kaggle Otto Product Classification | grid search, XGBoost | `snapshot create`, `snapshot ls` |
+| Kaggle Otto Product Classification <br> ([CLI via R Notebook](https://github.com/datmo/datmo-tutorials/tree/master/otto-xgboost-R)) | grid search, XGBoost | `snapshot create`, `snapshot ls` |
