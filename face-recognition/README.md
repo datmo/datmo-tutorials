@@ -1,19 +1,20 @@
 ### Face Recognition
 
-a. Introduction
+#### a. Introduction
+
 This is a tutorial on face recognition to show case classifiers built using datmo, in order to track our work and make machine learning workflow reproducible and usable. We have built classifier for facial recognition, with very few images here. The accuracy from this tutorial can be improved with more training images. You can also increase the number of classes or faces. 
 
 During this experimentation, we perform model engineering and will be using datmo to create versions of work by creating snapshot.
 
-b. Installation
-To use datmo, you can install it using pip install datmo after having the prerequisites as in this README
+#### b. Installation
+To use datmo, you can install it using pip install datmo after having the prerequisites as in this [README](!https://github.com/datmo/datmo)
 
 To run the experimentation.ipynb file, you can run it with datmo task run command, it uses docker for environment management.
 
 ```bash
 home:~/datmo-tutorials/face-recognition$ datmo task run -p 8888:8888 "jupyter notebook"
 ```
-c. Solution
+#### c. Solution
 After the installation, we run the experimentation.ipynb notebook and perform following steps,
 
 * Visualizing the images
@@ -22,7 +23,7 @@ After the installation, we run the experimentation.ipynb notebook and perform fo
 * Using random forest classifier 
 * Using KNN classifier
 
-d. Creating versions or snapshots
+#### d. Creating versions or snapshots
 During the process of model engineering, we will be using datmo to create versions of work by creating datmo snapshots. As you see below, we created two snapshots at the end of the notebook tutorial. More information about the flow can be found in the notebook file.
 
 ```bash
