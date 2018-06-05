@@ -7,7 +7,7 @@ This is a tutorial on face recognition to show case classifiers built using datm
 During this experimentation, we perform model engineering and will be using datmo to create versions of work by creating snapshot.
 
 #### b. Installation
-To use datmo, you can install it using pip install datmo after having the prerequisites as in this [README](!https://github.com/datmo/datmo)
+To use datmo, you can install it using pip install datmo after having the prerequisites as in this [README](https://github.com/datmo/datmo)
 
 To run the experimentation.ipynb file, you can run it with datmo task run command, it uses docker for environment management.
 
