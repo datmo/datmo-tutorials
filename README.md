@@ -30,7 +30,7 @@ For smaller examples with more isolated datmo feature demonstration, you can vie
 | Kaggle Titanic Survivor Prediction <br> ([CLI](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/cli) / [SDK in Jupyter Notebook](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/sdk)) | AutoML, TPOT, SVM | `task run`, `snapshot create`, `snapshot ls` |
 | Face Recognition (CLI in Jupyter Notebook) | CV, dlib, face_recognition | `task run`, `snapshot create`, `snapshot ls` |
 | Keras Fashion MNIST (CLI in Jupyter Notebook) | CV, keras, tensorflow | `task run`, `snapshot create`, `snapshot ls` |
-| Kaggle Jigsaw Toxic Comment Identification <br> (SDK in Jupyter Notebook (Coming Soon)) | NLP, bag of words | `snapshot create`, `snapshot ls` |
+| Kaggle Jigsaw Toxic Comment Identification <br> ([CLI in Jupyter Notebook]()) | NLP, capsule net, Keras | `snapshot create`, `snapshot ls`, `env setup`, `notebook` |
 
 
 ### R Tutorials
