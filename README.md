@@ -13,8 +13,10 @@ Prominent features addressed in the tutorials are as follows:
     * `snapshot inspect` - See in-depth info about a single snapshot
   
   * **State recreation & reproducibility** 
+    * `env setup` - Use one of our preconfigured environments, or bring your own!
     * `snapshot checkout` - Revert the project state to the version from a different snapshot
-    * `datmo task run` - Run a containerized task for easy environment handling
+    * `task run` - Run a containerized task for easy environment handling
+    * `notebook` - A streamlined way to spin up a Jupyter notebook
   
 
 For smaller examples with more isolated datmo feature demonstration, you can view the official core repository [here](https://github.com/datmo/datmo/tree/master/examples).
@@ -27,9 +29,9 @@ For smaller examples with more isolated datmo feature demonstration, you can vie
 
 | Project  | Tags | Datmo Features |
 | ------------- |:-------------:| -----|
-| Kaggle Titanic Survivor Prediction <br> ([CLI](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/cli) / [SDK in Jupyter Notebook](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/sdk)) | AutoML, TPOT, SVM | `task run`, `snapshot create`, `snapshot ls` |
-| Face Recognition (CLI in Jupyter Notebook) | CV, dlib, face_recognition | `task run`, `snapshot create`, `snapshot ls` |
-| Keras Fashion MNIST (CLI in Jupyter Notebook) | CV, keras, tensorflow | `task run`, `snapshot create`, `snapshot ls` |
+| Kaggle Titanic Survivor Prediction <br> ([CLI](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/cli) / [SDK in Jupyter Notebook](https://github.com/datmo/datmo-tutorials/tree/master/kaggle-titanic/sdk)) | AutoML, TPOT, SVM | `notebook`, `snapshot create`, `snapshot ls` |
+| Face Recognition <br> ([CLI in Jupyter Notebook](https://github.com/datmo/datmo-tutorials/tree/master/face-recognition)) | CV, dlib, face_recognition | `notebook`, `snapshot create`, `snapshot ls` |
+| Keras Fashion MNIST <br> ([CLI in Jupyter Notebook](https://github.com/datmo/datmo-tutorials/tree/master/keras-fashion-mnist)) | CV, keras, tensorflow | `notebook`, `snapshot create`, `snapshot ls` |
 | Kaggle Jigsaw Toxic Comment Identification <br> ([CLI in Jupyter Notebook](https://github.com/datmo/datmo-tutorials/tree/master/toxic-comment-identification)) | NLP, capsule net, Keras | `snapshot create`, `snapshot ls`, `env setup`, `notebook` |
 
 
