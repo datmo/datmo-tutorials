@@ -53,6 +53,6 @@ home:~/datmo-tutorials/auto-ml$ datmo snapshot ls
 ```
 After we've created snapshots, we can checkout to one of our previous states with the following command:
 ```bash
-home:~/datmo-tutorials/auto-ml$ datmo snapshot checkout --id adf76fa7
+home:~/datmo-tutorials/auto-ml$ datmo snapshot checkout adf76fa7
 ```
 This reinstates all files present at the time of snapshot creation, available for me to edit and run new tasks, or re-run code as I please.
