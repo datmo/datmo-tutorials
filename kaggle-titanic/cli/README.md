@@ -1,4 +1,4 @@
-# auto-ml 
+# auto-ml Titanic example with datmo (CLI)
 
 ### CLI
 
@@ -6,15 +6,15 @@
 
 ##### a. Introduction
 
-This tutorial is using the "Getting Started" competition from Kaggle [Titanic competition](https://www.kaggle.com/c/titanic) to showcase how we can use Auto-ML along with datmo, in order to track our work and make machine learning workflow reprocible and reusable. Some part of data analysis is inspired from this [kernel](https://www.kaggle.com/sinakhorami/titanic-best-working-classifier)
+This tutorial is using the "Getting Started" competition from Kaggle's [Titanic competition](https://www.kaggle.com/c/titanic) to showcase how we can use Auto-ML along with datmo, in order to track our work and make machine learning experiments reproducible and reusable. Some part of data analysis is inspired from this [kernel](https://www.kaggle.com/sinakhorami/titanic-best-working-classifier).
 
 ##### b. Installation
-To use `datmo`, you can install it using `pip install datmo` after having the prerequisites as in this [README](https://github.com/datmo/datmo)
+To use `datmo`, you can install it using `pip install datmo`. If you have trouble installing, try checking the prerequisites listed [here](https://github.com/datmo/datmo#requirements).
 
-To run the `experimentation.ipynb` file, you can run it with `datmo task run` command, it uses docker for environment management.
+To run the `experimentation.ipynb` file, you can run it with `$ datmo notebook` command. Datmo will automatically recreate the environment the experiment was run in and recreate it for you.
 
 ```bash
-home:~/datmo-tutorials/auto-ml$ datmo task run -p 8888:8888 "jupyter notebook"
+home:~/datmo-tutorials/auto-ml$ datmo notebook
 ```
 
 ##### c. Solution
@@ -28,9 +28,9 @@ After the installation, we run the `experimentation.ipynb` notebook and perform 
 For auto-ml, we use the tpot algorithm, which works as follows,
 ![](./images/usage_auto-ml.png)
 
-##### d. Creating versions or snapshots
+##### d. Creating versions (snapshots)
 
-During the process of EDA, data cleaning and algorithm selection, we would be using datmo to create versions of work by creating datmo snapshots. As you see below, we created three snapshots at the end of the notebook tutorial. More information about the flow can be found in the notebook file.
+During the process of EDA, data cleaning and algorithm selection, we will be using datmo to create versions of work by creating datmo snapshots. As you see below, we created three snapshots at the end of the notebook tutorial - One after EDA, and the later two from different versions of our model. More information about the flow can be found in the notebook file.
 
 ```bash
 home:~/datmo-tutorials/auto-ml$ datmo snapshot create -m "auto-ml-2"
@@ -51,8 +51,8 @@ home:~/datmo-tutorials/auto-ml$ datmo snapshot ls
 |         |             |  u'Embarked', u'Fare', u'Age', u'Title']} |                 |               |       |
 +---------+-------------+-------------------------------------------+-----------------+---------------+-------+
 ```
-Now after the creation of snapshots, we can perform checkout to a different version with the following command,
+After we've created snapshots, we can checkout to one of our previous states with the following command:
 ```bash
 home:~/datmo-tutorials/auto-ml$ datmo snapshot checkout --id adf76fa7
 ```
-This gives me all files present in that specific version providing reproducibility
+This reinstates all files present at the time of snapshot creation, available for me to edit and run new tasks, or re-run code as I please.
