@@ -11,7 +11,7 @@ To use datmo, you can install it using pip install datmo after having the prereq
 To run the experimentation.ipynb file, you can run it with datmo task run command, it uses docker for environment management.
 
 ```bash
-home:~/datmo-tutorials/keras-fashion-mnist$ datmo task run -p 8888:8888 "jupyter notebook"
+home:~/datmo-tutorials/keras-fashion-mnist$ datmo notebook
 ```
 
 #### c. Dataset

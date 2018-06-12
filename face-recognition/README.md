@@ -12,7 +12,7 @@ To use datmo, you can install it using pip install datmo after having the prereq
 To run the experimentation.ipynb file, you can run it with datmo task run command, it uses docker for environment management.
 
 ```bash
-home:~/datmo-tutorials/face-recognition$ datmo task run -p 8888:8888 "jupyter notebook"
+home:~/datmo-tutorials/face-recognition$ datmo notebook"
 ```
 #### c. Solution
 After the installation, we run the experimentation.ipynb notebook and perform following steps,
@@ -49,7 +49,7 @@ home:~/datmo-tutorials/face-recognition$ datmo snapshot ls
 Now after the creation of snapshots, we can perform checkout to a different version with the following command,
 
 ```
-home:~/datmo-tutorials/datmo-face-recognition$ # Run this command: datmo snapshot checkout --id <snapshot-id>
-home:~/datmo-tutorials/datmo-face-recognition$ datmo snapshot checkout --id 9095c50d30
+home:~/datmo-tutorials/datmo-face-recognition$ # Run this command: datmo snapshot checkout <snapshot-id>
+home:~/datmo-tutorials/datmo-face-recognition$ datmo snapshot checkout 9095c50d30
 ```
 Built using [dlib](http://blog.dlib.net/2017/02/high-quality-face-recognition-with-deep.html) and [face_recognition](https://github.com/ageitgey/face_recognition)
