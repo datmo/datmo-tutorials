@@ -7,12 +7,18 @@ This is a tutorial on face recognition to show case classifiers built using datm
 During this experimentation, we perform model engineering and will be using datmo to create versions of work by creating snapshot.
 
 #### b. Installation
-To use datmo, you can install it using pip install datmo after having the prerequisites as in this [README](https://github.com/datmo/datmo)
+To use datmo, you can install it using pip install datmo after having the Docker as the prerequisites as in this [README](https://github.com/datmo/datmo)
+
+```
+$ pip install datmo
+```
 
 To run the experimentation.ipynb file, you can run it with datmo task run command, it uses docker for environment management.
 
 ```bash
-home:~/datmo-tutorials/face-recognition$ datmo notebook"
+home:~/datmo-tutorials/face-recognition$ datmo init
+home:~/datmo-tutorials/face-recognition$ # press enter to skip the default environment setup and run the jupyter notebook
+home:~/datmo-tutorials/face-recognition$ datmo notebook
 ```
 #### c. Solution
 After the installation, we run the experimentation.ipynb notebook and perform following steps,
@@ -53,3 +59,13 @@ home:~/datmo-tutorials/datmo-face-recognition$ # Run this command: datmo snapsho
 home:~/datmo-tutorials/datmo-face-recognition$ datmo snapshot checkout 9095c50d30
 ```
 Built using [dlib](http://blog.dlib.net/2017/02/high-quality-face-recognition-with-deep.html) and [face_recognition](https://github.com/ageitgey/face_recognition)
+
+#### e. Listing runs and and reruning them
+You can list the runs using the command,
+```
+home:~/datmo-tutorials/datmo-face-recognition$ datmo run ls
+```
+Now, you can rerun any experiment for a particular run-id from the listed runs. 
+```
+home:~/datmo-tutorials/datmo-face-recognition$ datmo rerun <run-id>
+```
