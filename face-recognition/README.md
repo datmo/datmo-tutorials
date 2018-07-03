@@ -64,13 +64,13 @@ Built using [dlib](http://blog.dlib.net/2017/02/high-quality-face-recognition-wi
 You can list the runs using the command,
 ```
 home:~/datmo-tutorials/datmo-face-recognition$ datmo run ls
-+-----------------------------+------------------+---------+----------------------+---------+--------------------------------+
-|        id                   |     command      |  status |        config        | results |           created at           |
-+-----------------------------+------------------+---------+----------------------+---------+--------------------------------+
-| 0d0e315d5bc4ad3aee4c1       | jupyter notebook | SUCCESS | {u'n_neightbors': 7} |    {}   | Tue Jul 03 12:42:01 2018 -0700 |
++------------------------+------------------+---------+----------------------+---------+--------------------------------+
+|        id              |     command      |  status |        config        | results |           created at           |
++------------------------+------------------+---------+----------------------+---------+--------------------------------+
+|    0d0e315d5bc4a       | jupyter notebook | SUCCESS | {u'n_neightbors': 7} |    {}   | Tue Jul 03 12:42:01 2018 -0700 |
 +-----------------------------+------------------+---------+----------------------+---------+--------------------------------+
 ```
 Now, you can rerun any experiment for a particular run-id from the listed runs. 
 ```
-home:~/datmo-tutorials/datmo-face-recognition$ datmo rerun <run-id>
+home:~/datmo-tutorials/datmo-face-recognition$ datmo rerun 0d0e315d5bc4a
 ```
