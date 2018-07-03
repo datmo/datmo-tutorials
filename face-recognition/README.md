@@ -68,7 +68,7 @@ home:~/datmo-tutorials/datmo-face-recognition$ datmo run ls
 |        id              |     command      |  status |        config        | results |           created at           |
 +------------------------+------------------+---------+----------------------+---------+--------------------------------+
 |    0d0e315d5bc4a       | jupyter notebook | SUCCESS | {u'n_neightbors': 7} |    {}   | Tue Jul 03 12:42:01 2018 -0700 |
-+-----------------------------+------------------+---------+----------------------+---------+--------------------------------+
++------------------------+------------------+---------+----------------------+---------+--------------------------------+
 ```
 Now, you can rerun any experiment for a particular run-id from the listed runs. 
 ```
