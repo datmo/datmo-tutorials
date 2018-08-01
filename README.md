@@ -13,10 +13,13 @@ Prominent features addressed in the tutorials are as follows:
     * `snapshot inspect` - See in-depth info about a single snapshot
   
   * **State recreation & reproducibility** 
-    * `env setup` - Use one of our preconfigured environments, or bring your own!
     * `snapshot checkout` - Revert the project state to the version from a different snapshot
     * `task run` - Run a containerized task for easy environment handling
-    * `notebook` - A streamlined way to spin up a Jupyter notebook
+    
+  * **Environment Handling**
+    * `environment setup` - Use one of our preconfigured environments, or bring your own!
+    * `notebook` - A streamlined way to spin up a Jupyter Notebook
+    * `rstudio` - A streamlined way to spin up RStudio
   
 
 For smaller examples with more isolated datmo feature demonstration, you can view the official core repository [here](https://github.com/datmo/datmo/tree/master/examples).
