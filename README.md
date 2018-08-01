@@ -20,6 +20,8 @@ Prominent features addressed in the tutorials are as follows:
     * `environment setup` - Use one of our preconfigured environments, or bring your own!
     * `notebook` - A streamlined way to spin up a Jupyter Notebook
     * `rstudio` - A streamlined way to spin up RStudio
+    * `jupyterlab` - A streamlined way to spin up JupyterLab
+    * `terminal` - A streamlined way to enter a terminal inside the container
   
 
 For smaller examples with more isolated datmo feature demonstration, you can view the official core repository [here](https://github.com/datmo/datmo/tree/master/examples).
