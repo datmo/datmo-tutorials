@@ -40,6 +40,21 @@ The example notebook (`capsnet-keras.ipynb`) will cover the following:
 3. Download the GloVe embedding file [from this link](http://nlp.stanford.edu/data/glove.840B.300d.zip) (Warning: large file, around 2GB)
 4. Unzip the GloVe file and move it into the `input/` directory. Also unzip the `test.csv.zip` and `train.csv.zip` files already in `input/`.
 
+Before proceeding, your repository should look as follows:
+```
+.
+├── README.md
+├── best.hdf5
+├── capsnet-keras.ipynb
+├── input
+│   ├── glove.840B.300d.txt
+│   ├── test.csv
+│   ├── test.csv.zip
+│   ├── train.csv
+│   └── train.csv.zip
+└── output
+```
+
 **Setting up the environment:**
 
 5. Initialize your datmo repo with `$ datmo init` 
