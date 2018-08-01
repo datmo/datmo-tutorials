@@ -14,7 +14,7 @@ Prominent features addressed in the tutorials are as follows:
   
   * **State recreation & reproducibility** 
     * `snapshot checkout` - Revert the project state to the version from a different snapshot
-    * `task run` - Run a containerized task for easy environment handling
+    * `run` - Run a containerized task for easy environment handling
     
   * **Environment Handling**
     * `environment setup` - Use one of our preconfigured environments, or bring your own!
