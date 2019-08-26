@@ -1,4 +1,2 @@
-FROM datmo/keras-tensorflow:cpu
-
-RUN pip install requests==2.11.1
+FROM datmo/keras-tensorflow:cpu-py27
 
